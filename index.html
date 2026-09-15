@@ -1610,4 +1610,272 @@ function scenery(){
       (i*.065+
       game.distance*.0017)%1;
 
-    if(z<.07)con
+  if(z<.06) continue;
+    const y=perspective(z);
+    const side=i%2===0?-1:1;
+    const x=W/2+side*(roadWidth(z)*.55+35);
+    const s=.35+.95*z;
+
+    if(area===0){
+      house(x,y,s*.9);
+    }else{
+      tree(x,y,s);
+    }
+  }
+}
+
+/* =========================
+   OBJECTS
+========================= */
+function spawnObject(type,lane,z=0){
+  game.objects.push({
+    type,
+    lane,
+    z,
+    seed:Math.random()*Math.PI*2
+  });
+}
+
+function resetObjects(){
+  game.objects=[];
+  game.particles=[];
+  spawnObject('coin',0,.55);
+  spawnObject('coin',1,.72);
+  spawnObject('gem',2,.9);
+  spawnObject('barrier',1,1.08);
+}
+
+function maybeSpawn(){
+  if(!game.running || game.paused) return;
+  const farthest=game.objects.reduce((m,o)=>Math.max(m,o.z),0);
+  if(farthest<1.05){
+    const lane=Math.floor(Math.random()*3);
+    const r=Math.random();
+    if(r<.52) spawnObject('coin',lane,1.12);
+    else if(r<.70) spawnObject('gem',lane,1.12);
+    else spawnObject('barrier',lane,1.12);
+
+    if(Math.random()<.38){
+      const lane2=Math.floor(Math.random()*3);
+      const type2=Math.random()<.7?'coin':'gem';
+      spawnObject(type2,lane2,1.28);
+    }
+  }
+}
+
+function collect(o){
+  if(o.type==='coin') game.coins++;
+  if(o.type==='gem') game.gems++;
+  game.score += o.type==='gem' ? 50 : 20;
+}
+
+function hitBarrier(){
+  if(player.hit>0) return;
+  game.life--;
+  player.hit=.9;
+  game.score=Math.max(0,game.score-30);
+  const flash=document.getElementById('flash');
+  flash.style.opacity='.75';
+  setTimeout(()=>{flash.style.opacity='0';},120);
+  if(game.life<=0) endGame();
+}
+
+function updateObjects(dt){
+  for(let i=game.objects.length-1;i>=0;i--){
+    const o=game.objects[i];
+    o.z-=game.speed*dt*1.15;
+
+    if(o.z<0.18){
+      const sameLane=o.lane===game.lane;
+      const airborne=player.jump>55;
+      if(sameLane){
+        if(o.type==='barrier'){
+          if(!airborne && player.hit<=0){
+            hitBarrier();
+            game.objects.splice(i,1);
+            continue;
+          }
+        }else if(player.jump<170){
+          collect(o);
+          game.objects.splice(i,1);
+          continue;
+        }
+      }
+    }
+
+    if(o.z<-0.08) game.objects.splice(i,1);
+  }
+}
+
+function updatePlayer(dt){
+  if(player.jump>0 || player.velocity>0){
+    player.velocity-=.0024*dt;
+    player.jump+=player.velocity*dt;
+    if(player.jump<=0){
+      player.jump=0;
+      player.velocity=0;
+    }
+  }
+  if(player.hit>0) player.hit=Math.max(0,player.hit-dt/1000);
+}
+
+function updateHUD(){
+  document.getElementById('score').textContent=Math.floor(game.score);
+  document.getElementById('coins').textContent=game.coins;
+  document.getElementById('gems').textContent=game.gems;
+  document.getElementById('life').textContent=game.life;
+}
+
+function showArea(){
+  const names=['🌆 KOTA','🕳️ GOA','🏡 DESA'];
+  const area=getArea();
+  const el=document.getElementById('area');
+  if(game.area!==area){
+    game.area=area;
+    el.textContent=names[area];
+    el.style.opacity='1';
+    clearTimeout(showArea.timer);
+    showArea.timer=setTimeout(()=>el.style.opacity='0',1200);
+  }
+}
+
+function update(dt){
+  if(!game.running || game.paused) return;
+  game.distance += game.speed*dt*100;
+  game.score += dt*0.018;
+  game.speed=Math.min(.018, .009 + game.distance*.0000015);
+  updatePlayer(dt);
+  updateObjects(dt);
+  maybeSpawn();
+  showArea();
+  updateHUD();
+}
+
+function draw(){
+  drawSky();
+  const area=getArea();
+  if(area===0) city();
+  if(area===1) cave();
+  scenery();
+  rails();
+
+  const objs=[...game.objects].sort((a,b)=>a.z-b.z);
+  for(const o of objs){
+    if(o.type==='train') train(o);
+    else if(o.type==='coin') coin(o);
+    else if(o.type==='gem') gem(o);
+    else if(o.type==='barrier') barrier(o);
+  }
+
+  if(game.running) drawPlayer();
+}
+
+let lastTime=performance.now();
+function loop(now){
+  const dt=Math.min(40, now-lastTime);
+  lastTime=now;
+  update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function startGame(){
+  game.running=true;
+  game.paused=false;
+  game.lane=1;
+  game.targetLane=1;
+  game.score=0;
+  game.coins=0;
+  game.gems=0;
+  game.life=3;
+  game.distance=0;
+  game.speed=.009;
+  game.area=-1;
+  player.jump=0;
+  player.velocity=0;
+  player.run=0;
+  player.hit=0;
+  resetObjects();
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('over').classList.add('hidden');
+  document.getElementById('pause').textContent='Ⅱ';
+  updateHUD();
+}
+
+function endGame(){
+  game.running=false;
+  game.paused=false;
+  game.best=Math.max(game.best,Math.floor(game.score));
+  try{localStorage.setItem('railAdventureBest',String(game.best));}catch(e){}
+  document.getElementById('finalScore').textContent=Math.floor(game.score);
+  document.getElementById('best').textContent=game.best;
+  document.getElementById('over').classList.remove('hidden');
+}
+
+function moveLeft(){
+  if(!game.running || game.paused) return;
+  game.targetLane=Math.max(0,game.targetLane-1);
+  game.lane=game.targetLane;
+}
+function moveRight(){
+  if(!game.running || game.paused) return;
+  game.targetLane=Math.min(2,game.targetLane+1);
+  game.lane=game.targetLane;
+}
+function jump(){
+  if(!game.running || game.paused) return;
+  if(player.jump===0){
+    player.velocity=.72;
+  }
+}
+function togglePause(){
+  if(!game.running) return;
+  game.paused=!game.paused;
+  document.getElementById('pause').textContent=game.paused?'▶':'Ⅱ';
+}
+
+document.getElementById('startBtn').addEventListener('click',startGame);
+document.getElementById('again').addEventListener('click',startGame);
+document.getElementById('leftBtn').addEventListener('click',moveLeft);
+document.getElementById('rightBtn').addEventListener('click',moveRight);
+document.getElementById('jumpBtn').addEventListener('click',jump);
+document.getElementById('pause').addEventListener('click',togglePause);
+
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='ArrowLeft' || e.key.toLowerCase()==='a') moveLeft();
+  else if(e.key==='ArrowRight' || e.key.toLowerCase()==='d') moveRight();
+  else if(e.key==='ArrowUp' || e.key===' ' || e.key.toLowerCase()==='w'){
+    e.preventDefault();
+    jump();
+  }else if(e.key.toLowerCase()==='p') togglePause();
+});
+
+let touchStartX=0, touchStartY=0;
+canvas.addEventListener('touchstart',(e)=>{
+  const t=e.changedTouches[0];
+  touchStartX=t.clientX;
+  touchStartY=t.clientY;
+},{passive:true});
+
+canvas.addEventListener('touchend',(e)=>{
+  const t=e.changedTouches[0];
+  const dx=t.clientX-touchStartX;
+  const dy=t.clientY-touchStartY;
+
+  if(Math.max(Math.abs(dx),Math.abs(dy))<28) return;
+
+  if(Math.abs(dx)>Math.abs(dy)){
+    if(dx<0) moveLeft();
+    else moveRight();
+  }else if(dy<0){
+    jump();
+  }
+},{passive:true});
+
+document.getElementById('best').textContent=game.best;
+updateHUD();
+requestAnimationFrame(loop);
+
+</script>
+</body>
+</html>
