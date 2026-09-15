@@ -2,176 +2,31 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rail Rush Adventure</title>
-
 <style>
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
-  background:#101827;
-}
-
-body{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-#game{
-  position:relative;
-  width:min(100vw,900px);
-  height:min(100vh,700px);
-  overflow:hidden;
-  background:#87ceeb;
-  border-radius:18px;
-  box-shadow:0 10px 40px rgba(0,0,0,.35);
-}
-
-canvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-}
-
-.hud{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  z-index:5;
-  pointer-events:none;
-}
-
-.box{
-  background:rgba(0,0,0,.45);
-  color:#fff;
-  padding:8px 12px;
-  border-radius:12px;
-  font-weight:bold;
-  backdrop-filter:blur(5px);
-}
-
-#pause{
-  pointer-events:auto;
-  border:0;
-  cursor:pointer;
-  font-size:20px;
-}
-
-.center{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:10;
-}
-
-.panel{
-  width:min(92%,440px);
-  padding:28px;
-  text-align:center;
-  background:rgba(255,255,255,.96);
-  border-radius:24px;
-  box-shadow:0 15px 40px rgba(0,0,0,.25);
-}
-
-.panel h1{
-  margin:0 0 8px;
-  font-size:34px;
-  color:#163b67;
-}
-
-.panel p{
-  margin:8px 0 20px;
-  color:#444;
-  line-height:1.5;
-}
-
-button.main{
-  border:0;
-  border-radius:14px;
-  padding:14px 26px;
-  font-size:20px;
-  font-weight:bold;
-  background:#1e88e5;
-  color:white;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none;
-}
-
-.controls{
-  position:absolute;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:10px;
-  z-index:6;
-}
-
-.ctrl{
-  width:62px;
-  height:62px;
-  border:0;
-  border-radius:18px;
-  background:rgba(0,0,0,.45);
-  color:#fff;
-  font-size:28px;
-  cursor:pointer;
-  user-select:none;
-}
-
-.area{
-  position:absolute;
-  top:74px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:5;
-  color:#fff;
-  background:rgba(0,0,0,.4);
-  padding:7px 14px;
-  border-radius:20px;
-  font-weight:bold;
-  opacity:0;
-  transition:opacity .3s;
-}
-
-.flash{
-  position:absolute;
-  inset:0;
-  background:#ff1744;
-  opacity:0;
-  pointer-events:none;
-  z-index:8;
-  transition:opacity .08s;
-}
-
-.small{
-  font-size:14px;
-  color:#666;
-}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#101827}
+body{display:flex;justify-content:center;align-items:center}
+#game{position:relative;width:min(100vw,900px);height:min(100vh,700px);overflow:hidden;background:#87ceeb;border-radius:18px}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;z-index:5}
+.box{background:rgba(0,0,0,.45);color:#fff;padding:8px 12px;border-radius:12px;font-weight:bold}
+button{cursor:pointer}
+.center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10}
+.panel{width:min(90%,430px);padding:28px;text-align:center;background:#fff;border-radius:22px;box-shadow:0 15px 40px rgba(0,0,0,.25)}
+.panel h1{color:#163b67}
+.main{border:0;border-radius:14px;padding:14px 26px;font-size:20px;font-weight:bold;background:#1e88e5;color:white}
+.hidden{display:none}
+.controls{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:6}
+.ctrl{width:62px;height:62px;border:0;border-radius:18px;background:rgba(0,0,0,.45);color:#fff;font-size:28px}
+#area{position:absolute;top:70px;left:50%;transform:translateX(-50%);z-index:5;color:#fff;background:rgba(0,0,0,.4);padding:7px 14px;border-radius:20px;opacity:0;transition:.3s}
+#flash{position:absolute;inset:0;background:red;opacity:0;z-index:8;pointer-events:none}
 </style>
 </head>
 
 <body>
-
 <div id="game">
-
 <canvas id="canvas" width="900" height="700"></canvas>
 
 <div class="hud">
@@ -182,45 +37,24 @@ button.main{
   <button class="box" id="pause">Ⅱ</button>
 </div>
 
-<div id="area" class="area">🌆 KOTA</div>
-<div id="flash" class="flash"></div>
+<div id="area">🌆 KOTA</div>
+<div id="flash"></div>
 
 <div id="start" class="center">
   <div class="panel">
     <h1>🚆 Rail Rush Adventure</h1>
-
-    <p>
-      Hindari penghalang, kumpulkan koin dan permata,
-      lalu raih skor setinggi mungkin!
-    </p>
-
-    <button class="main" id="startBtn">
-      MULAI GAME
-    </button>
-
-    <p class="small">
-      ⬅️ ➡️ berpindah jalur • ⬆️ melompat
-    </p>
+    <p>Hindari penghalang, kumpulkan koin dan permata!</p>
+    <button class="main" id="startBtn">MULAI GAME</button>
+    <p>⬅️ ➡️ berpindah jalur<br>⬆️ melompat</p>
   </div>
 </div>
 
 <div id="over" class="center hidden">
   <div class="panel">
     <h1>💥 GAME OVER</h1>
-
-    <p>
-      Skor kamu:
-      <b id="finalScore">0</b>
-    </p>
-
-    <p>
-      Skor terbaik:
-      <b id="best">0</b>
-    </p>
-
-    <button class="main" id="again">
-      MAIN LAGI
-    </button>
+    <p>Skor: <b id="finalScore">0</b></p>
+    <p>Terbaik: <b id="best">0</b></p>
+    <button class="main" id="again">MAIN LAGI</button>
   </div>
 </div>
 
@@ -229,69 +63,33 @@ button.main{
   <button class="ctrl" id="jumpBtn">⬆️</button>
   <button class="ctrl" id="rightBtn">➡️</button>
 </div>
-
 </div>
 
 <script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const W=900,H=700;
 
-const W = canvas.width;
-const H = canvas.height;
-
-/* =========================
-   GAME
-========================= */
-
-const game = {
+const game={
   running:false,
   paused:false,
-
   score:0,
   coins:0,
   gems:0,
   life:3,
-
   lane:1,
-  targetLane:1,
-
-  /* SANGAT PELAN */
-  speed:0.075,
-
+  speed:0.0075,
   distance:0,
-
-  spawnTimer:0,
-
-  area:-1,
-
-  best:Number(
-    localStorage.getItem("railBest") || 0
-  )
+  spawnTimer:8000,
+  best:Number(localStorage.getItem("railBest")||0)
 };
 
-const player = {
-  jump:0,
-  velocity:0,
-  hit:0,
-  run:0
-};
-
+const player={jump:0,velocity:0,hit:0};
 let objects=[];
-let lastTime=performance.now();
-
-/* =========================
-   BASIC
-========================= */
-
-function clamp(v,a,b){
-  return Math.max(a,Math.min(b,v));
-}
+let last=performance.now();
 
 function laneX(lane,z=0){
-  const center=W/2;
-  const spread=125+z*85;
-
-  return center+(lane-1)*spread;
+  return W/2+(lane-1)*(125+z*85);
 }
 
 function roadY(z){
@@ -302,33 +100,16 @@ function scale(z){
   return .35+z*.95;
 }
 
-/* =========================
-   BACKGROUND
-========================= */
-
-function sky(){
-
-  const g=ctx.createLinearGradient(
-    0,0,0,H
-  );
-
+function drawBackground(){
+  const g=ctx.createLinearGradient(0,0,0,H);
   g.addColorStop(0,"#63b8ff");
   g.addColorStop(.55,"#bde9ff");
   g.addColorStop(1,"#f5d6a1");
-
   ctx.fillStyle=g;
-
-  ctx.fillRect(
-    0,0,W,H
-  );
-}
-
-function mountains(){
+  ctx.fillRect(0,0,W,H);
 
   ctx.fillStyle="#7ca56c";
-
   ctx.beginPath();
-
   ctx.moveTo(0,330);
   ctx.lineTo(120,220);
   ctx.lineTo(220,315);
@@ -337,866 +118,274 @@ function mountains(){
   ctx.lineTo(600,210);
   ctx.lineTo(760,325);
   ctx.lineTo(900,200);
-
   ctx.lineTo(900,380);
   ctx.lineTo(0,380);
-
   ctx.closePath();
-
   ctx.fill();
 }
 
-function scenery(){
-
-  const area=
-    Math.floor(game.distance/2000)%3;
-
-  if(area===0){
-
-    for(let i=0;i<7;i++){
-
-      const x=i*150-20;
-      const h=55+(i%3)*28;
-
-      ctx.fillStyle="#78909c";
-
-      ctx.fillRect(
-        x,
-        330-h,
-        70,
-        h
-      );
-
-      ctx.fillStyle="#ffe082";
-
-      for(let r=0;r<3;r++){
-
-        for(let c=0;c<2;c++){
-
-          ctx.fillRect(
-            x+10+c*28,
-            342-h+r*20,
-            12,
-            10
-          );
-
-        }
-      }
-    }
-  }
-
-  if(area===1){
-
-    ctx.fillStyle="#4e342e";
-
-    ctx.beginPath();
-
-    ctx.moveTo(0,315);
-
-    ctx.quadraticCurveTo(
-      170,190,
-      330,315
-    );
-
-    ctx.quadraticCurveTo(
-      470,170,
-      610,315
-    );
-
-    ctx.quadraticCurveTo(
-      760,170,
-      900,315
-    );
-
-    ctx.lineTo(900,700);
-    ctx.lineTo(0,700);
-
-    ctx.closePath();
-
-    ctx.fill();
-  }
-
-  if(area===2){
-
-    for(let i=0;i<8;i++){
-
-      const x=i*125;
-
-      ctx.fillStyle="#2e7d32";
-
-      ctx.beginPath();
-
-      ctx.arc(
-        x+40,
-        310,
-        35,
-        0,
-        Math.PI*2
-      );
-
-      ctx.fill();
-
-      ctx.fillStyle="#795548";
-
-      ctx.fillRect(
-        x+35,
-        310,
-        10,
-        50
-      );
-    }
-  }
-}
-
-function road(){
-
+function drawRoad(){
   ctx.fillStyle="#505050";
-
   ctx.beginPath();
-
   ctx.moveTo(0,700);
   ctx.lineTo(900,700);
   ctx.lineTo(620,340);
   ctx.lineTo(280,340);
-
   ctx.closePath();
-
   ctx.fill();
 
-  ctx.strokeStyle="#d6d6d6";
+  ctx.strokeStyle="#ddd";
   ctx.lineWidth=7;
 
   for(let lane=0;lane<3;lane++){
-
-    const bx=laneX(lane,1);
-    const tx=laneX(lane,0);
-
     ctx.beginPath();
-    ctx.moveTo(bx,700);
-    ctx.lineTo(tx,340);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(bx+40,700);
-    ctx.lineTo(tx+10,340);
+    ctx.moveTo(laneX(lane,1),700);
+    ctx.lineTo(laneX(lane,0),340);
     ctx.stroke();
   }
 
-  for(let i=0;i<18;i++){
-
-    const z=i/18;
-    const y=roadY(z);
-
-    const left=
-      laneX(0,z)-35;
-
-    const right=
-      laneX(2,z)+35;
-
-    ctx.fillStyle="#7b5e45";
-
+  for(let i=0;i<16;i++){
+    const z=i/16;
+    ctx.fillStyle="#795548";
     ctx.fillRect(
-      left,
-      y,
-      Math.max(
-        20,
-        (right-left)*.12
-      ),
-      7
+      laneX(0,z)-30,
+      roadY(z),
+      170+z*250,
+      6
     );
   }
 }
 
-/* =========================
-   OBJECTS
-========================= */
+function drawScenery(){
+  const area=Math.floor(game.distance/1800)%3;
 
-function addObject(
-  type,
-  lane,
-  z
-){
+  if(area===0){
+    for(let i=0;i<7;i++){
+      const x=i*145;
+      const h=60+(i%3)*25;
+      ctx.fillStyle="#78909c";
+      ctx.fillRect(x,330-h,70,h);
+      ctx.fillStyle="#ffe082";
+      ctx.fillRect(x+12,315-h,12,12);
+      ctx.fillRect(x+40,315-h,12,12);
+    }
+  }
 
-  objects.push({
-    type,
-    lane,
-    z,
-    spin:Math.random()*Math.PI*2
-  });
+  if(area===1){
+    ctx.fillStyle="#4e342e";
+    ctx.beginPath();
+    ctx.arc(450,420,350,Math.PI,0);
+    ctx.fill();
+  }
+
+  if(area===2){
+    for(let i=0;i<8;i++){
+      const x=i*125+40;
+      ctx.fillStyle="#2e7d32";
+      ctx.beginPath();
+      ctx.arc(x,310,35,0,Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle="#795548";
+      ctx.fillRect(x-5,310,10,55);
+    }
+  }
+}
+
+function addObject(type,lane,z){
+  objects.push({type,lane,z,spin:0});
 }
 
 function resetObjects(){
-
   objects=[];
-
-  /*
-    Jarak awal dibuat jauh
-    agar pemain punya waktu.
-  */
-
-  addObject("coin",0,1.10);
-  addObject("coin",1,1.35);
-  addObject("gem",2,1.60);
-
-  addObject("barrier",1,2.00);
+  addObject("coin",0,1.3);
+  addObject("coin",1,1.7);
+  addObject("gem",2,2.1);
+  addObject("barrier",1,2.8);
 }
 
 function spawnWave(){
-
-  const lane=
-    Math.floor(
-      Math.random()*3
-    );
-
+  const lane=Math.floor(Math.random()*3);
   const r=Math.random();
 
-  if(r<.55){
-
-    addObject(
-      "coin",
-      lane,
-      1.80
-    );
-
-  }else if(r<.75){
-
-    addObject(
-      "gem",
-      lane,
-      1.80
-    );
-
-  }else{
-
-    addObject(
-      "barrier",
-      lane,
-      1.80
-    );
-  }
+  if(r<.55) addObject("coin",lane,2.2);
+  else if(r<.75) addObject("gem",lane,2.2);
+  else addObject("barrier",lane,2.2);
 }
 
 function drawCoin(o){
-
   const x=laneX(o.lane,o.z);
-
-  const y=
-    roadY(o.z)
-    -65*scale(o.z);
-
-  const r=
-    16*scale(o.z);
-
-  ctx.save();
-
-  ctx.translate(x,y);
-
-  ctx.rotate(o.spin);
+  const y=roadY(o.z)-60*scale(o.z);
+  const r=16*scale(o.z);
 
   ctx.fillStyle="#ffd54f";
-
   ctx.beginPath();
-
-  ctx.arc(
-    0,0,r,
-    0,
-    Math.PI*2
-  );
-
+  ctx.arc(x,y,r,0,Math.PI*2);
   ctx.fill();
 
   ctx.fillStyle="#fff3a0";
-
-  ctx.fillRect(
-    -3*scale(o.z),
-    -9*scale(o.z),
-    6*scale(o.z),
-    18*scale(o.z)
-  );
-
-  ctx.restore();
+  ctx.fillRect(x-3*scale(o.z),y-9*scale(o.z),6*scale(o.z),18*scale(o.z));
 }
 
 function drawGem(o){
-
   const x=laneX(o.lane,o.z);
-
-  const y=
-    roadY(o.z)
-    -72*scale(o.z);
-
-  const s=
-    18*scale(o.z);
+  const y=roadY(o.z)-70*scale(o.z);
+  const s=18*scale(o.z);
 
   ctx.save();
-
   ctx.translate(x,y);
   ctx.rotate(Math.PI/4);
-
   ctx.fillStyle="#63f3ff";
-
-  ctx.fillRect(
-    -s/2,
-    -s/2,
-    s,
-    s
-  );
-
+  ctx.fillRect(-s/2,-s/2,s,s);
   ctx.restore();
 }
 
 function drawBarrier(o){
-
   const x=laneX(o.lane,o.z);
-
-  const y=
-    roadY(o.z)
-    -28*scale(o.z);
-
-  const w=
-    46*scale(o.z);
-
-  const h=
-    45*scale(o.z);
+  const y=roadY(o.z)-25*scale(o.z);
+  const w=50*scale(o.z);
+  const h=45*scale(o.z);
 
   ctx.fillStyle="#d84315";
-
-  ctx.fillRect(
-    x-w/2,
-    y-h,
-    w,
-    h
-  );
+  ctx.fillRect(x-w/2,y-h,w,h);
 
   ctx.fillStyle="#fff";
-
-  ctx.fillRect(
-    x-w/2,
-    y-h*.65,
-    w,
-    7*scale(o.z)
-  );
-
-  ctx.fillRect(
-    x-w/2,
-    y-h*.25,
-    w,
-    7*scale(o.z)
-  );
+  ctx.fillRect(x-w/2,y-h*.65,w,7);
+  ctx.fillRect(x-w/2,y-h*.25,w,7);
 }
 
-/* =========================
-   PLAYER
-========================= */
-
 function drawPlayer(){
+  const x=laneX(game.lane);
+  const y=roadY(0)-28-player.jump;
 
-  const x=
-    laneX(
-      game.lane,
-      0
-    );
-
-  const base=
-    roadY(0)-28;
-
-  const y=
-    base-player.jump;
-
-  if(
-    player.hit>0 &&
-    Math.floor(
-      player.hit*12
-    )%2===0
-  ){
-
-    return;
-  }
-
-  ctx.save();
-
-  ctx.translate(x,y);
+  if(player.hit>0 && Math.floor(player.hit*10)%2===0)return;
 
   ctx.fillStyle="#1565c0";
-
-  ctx.fillRect(
-    -18,
-    -55,
-    36,
-    35
-  );
+  ctx.fillRect(x-18,y-55,36,35);
 
   ctx.fillStyle="#ffcc80";
-
   ctx.beginPath();
-
-  ctx.arc(
-    0,
-    -68,
-    16,
-    0,
-    Math.PI*2
-  );
-
+  ctx.arc(x,y-68,16,0,Math.PI*2);
   ctx.fill();
 
   ctx.fillStyle="#263238";
-
-  ctx.fillRect(
-    -13,
-    -83,
-    26,
-    8
-  );
+  ctx.fillRect(x-13,y-83,26,8);
 
   ctx.fillStyle="#212121";
-
-  ctx.fillRect(
-    -14,
-    -20,
-    10,
-    25
-  );
-
-  ctx.fillRect(
-    4,
-    -20,
-    10,
-    25
-  );
-
-  ctx.restore();
+  ctx.fillRect(x-14,y-20,10,25);
+  ctx.fillRect(x+4,y-20,10,25);
 }
 
-/* =========================
-   COLLECT / HIT
-========================= */
-
 function collect(type){
-
   if(type==="coin"){
-
     game.coins++;
     game.score+=20;
-  }
-
-  if(type==="gem"){
-
+  }else{
     game.gems++;
     game.score+=50;
   }
 }
 
 function hitBarrier(){
-
   if(player.hit>0)return;
 
   player.hit=.8;
-
   game.life--;
+  game.score=Math.max(0,game.score-30);
 
-  game.score=
-    Math.max(
-      0,
-      game.score-30
-    );
-
-  document.getElementById(
-    "flash"
-  ).style.opacity=".65";
+  document.getElementById("flash").style.opacity=.5;
 
   setTimeout(()=>{
-
-    document.getElementById(
-      "flash"
-    ).style.opacity="0";
-
+    document.getElementById("flash").style.opacity=0;
   },120);
 
-  if(game.life<=0){
-
-    endGame();
-  }
+  if(game.life<=0)endGame();
 }
 
-/* =========================
-   UPDATE OBJECTS
-========================= */
-
 function updateObjects(dt){
-
-  for(
-    let i=objects.length-1;
-    i>=0;
-    i--
-  ){
-
+  for(let i=objects.length-1;i>=0;i--){
     const o=objects[i];
 
-    /*
-      SANGAT PELAN.
-      dt/1000 = detik.
-    */
+    /* SANGAT PELAN */
+    o.z-=game.speed*(dt/1000);
 
-    o.z -=
-      game.speed*
-      (dt/1000);
+    if(o.z<0.18 && o.lane===game.lane){
 
-    o.spin +=
-      dt/500;
+      if(o.type==="barrier"){
+        if(player.jump<55)hitBarrier();
+        objects.splice(i,1);
+        continue;
+      }
 
-    /*
-      Objek sudah cukup dekat
-      dengan pemain.
-    */
-
-    if(o.z<0.18){
-
-      if(
-        o.lane===
-        game.lane
-      ){
-
-        if(
-          o.type===
-          "barrier"
-        ){
-
-          if(
-            player.jump<55
-          ){
-
-            hitBarrier();
-          }
-
-          objects.splice(i,1);
-
-          continue;
-        }
-
-        if(
-          player.jump<120
-        ){
-
-          collect(
-            o.type
-          );
-
-          objects.splice(i,1);
-
-          continue;
-        }
+      if(player.jump<120){
+        collect(o.type);
+        objects.splice(i,1);
+        continue;
       }
     }
 
-    if(o.z<-0.15){
-
-      objects.splice(i,1);
-    }
+    if(o.z<-0.2)objects.splice(i,1);
   }
 }
 
-/* =========================
-   PLAYER UPDATE
-========================= */
-
 function updatePlayer(dt){
+  if(player.jump>0 || player.velocity>0){
+    player.velocity-=.0019*dt;
+    player.jump+=player.velocity*dt/16;
 
-  if(
-    player.jump>0 ||
-    player.velocity>0
-  ){
-
-    player.velocity -=
-      0.0019*dt;
-
-    player.jump +=
-      player.velocity*
-      dt/16;
-
-    if(
-      player.jump<=0
-    ){
-
+    if(player.jump<=0){
       player.jump=0;
       player.velocity=0;
     }
   }
 
   if(player.hit>0){
-
-    player.hit=
-      Math.max(
-        0,
-        player.hit-dt/1000
-      );
+    player.hit=Math.max(0,player.hit-dt/1000);
   }
-
-  player.run+=dt/100;
 }
 
-/* =========================
-   MAIN UPDATE
-========================= */
-
 function update(dt){
+  if(!game.running||game.paused)return;
 
-  if(
-    !game.running ||
-    game.paused
-  ){
+  game.distance+=game.speed*(dt/1000)*100;
 
-    return;
-  }
+  game.score+=dt*.01;
 
-  /*
-    PERGERAKAN SANGAT PELAN
-  */
-
-  game.distance +=
-    game.speed*
-    (dt/1000)*
-    100;
-
-  game.score +=
-    dt*.01;
-
-  /*
-    Kecepatan bertambah sangat lambat.
-    Maksimum hanya 0.13.
-  */
-
-  game.speed=
-    Math.min(
-      0.13,
-      0.075+
-      game.distance*
-      0.000008
-    );
+  /* Kecepatan naik sangat perlahan */
+  game.speed=Math.min(
+    0.013,
+    0.0075+game.distance*0.0000008
+  );
 
   game.spawnTimer-=dt;
 
-  /*
-    Rintangan muncul
-    sekitar setiap 3 detik.
-  */
-
-  if(
-    game.spawnTimer<=0
-  ){
-
+  if(game.spawnTimer<=0){
     spawnWave();
-
-    game.spawnTimer=
-      3000;
+    game.spawnTimer=7000;
   }
 
   updatePlayer(dt);
-
   updateObjects(dt);
-
   updateHUD();
-
-  updateArea();
 }
-
-/* =========================
-   HUD
-========================= */
 
 function updateHUD(){
-
-  document.getElementById(
-    "score"
-  ).textContent=
-    Math.floor(
-      game.score
-    );
-
-  document.getElementById(
-    "coins"
-  ).textContent=
-    game.coins;
-
-  document.getElementById(
-    "gems"
-  ).textContent=
-    game.gems;
-
-  document.getElementById(
-    "life"
-  ).textContent=
-    game.life;
+  document.getElementById("score").textContent=Math.floor(game.score);
+  document.getElementById("coins").textContent=game.coins;
+  document.getElementById("gems").textContent=game.gems;
+  document.getElementById("life").textContent=game.life;
 }
-
-/* =========================
-   AREA
-========================= */
-
-function updateArea(){
-
-  const area=
-    Math.floor(
-      game.distance/2500
-    )%3;
-
-  if(
-    area===
-    game.area
-  ){
-
-    return;
-  }
-
-  game.area=area;
-
-  const names=[
-    "🌆 KOTA",
-    "🕳️ GOA",
-    "🏡 DESA"
-  ];
-
-  const el=
-    document.getElementById(
-      "area"
-    );
-
-  el.textContent=
-    names[area];
-
-  el.style.opacity="1";
-
-  clearTimeout(
-    updateArea.timer
-  );
-
-  updateArea.timer=
-    setTimeout(()=>{
-
-      el.style.opacity="0";
-
-    },1200);
-}
-
-/* =========================
-   MOVEMENT
-========================= */
-
-function moveLeft(){
-
-  if(
-    !game.running ||
-    game.paused
-  ){
-
-    return;
-  }
-
-  game.targetLane=
-    clamp(
-      game.targetLane-1,
-      0,
-      2
-    );
-
-  game.lane=
-    game.targetLane;
-}
-
-function moveRight(){
-
-  if(
-    !game.running ||
-    game.paused
-  ){
-
-    return;
-  }
-
-  game.targetLane=
-    clamp(
-      game.targetLane+1,
-      0,
-      2
-    );
-
-  game.lane=
-    game.targetLane;
-}
-
-function jump(){
-
-  if(
-    !game.running ||
-    game.paused
-  ){
-
-    return;
-  }
-
-  if(
-    player.jump===0
-  ){
-
-    player.velocity=.95;
-  }
-}
-
-function togglePause(){
-
-  if(
-    !game.running
-  ){
-
-    return;
-  }
-
-  game.paused=
-    !game.paused;
-
-  document.getElementById(
-    "pause"
-  ).textContent=
-    game.paused
-    ? "▶"
-    : "Ⅱ";
-}
-
-/* =========================
-   START
-========================= */
 
 function startGame(){
-
   game.running=true;
-
   game.paused=false;
-
   game.score=0;
   game.coins=0;
   game.gems=0;
-
   game.life=3;
-
   game.lane=1;
-  game.targetLane=1;
-
-  /*
-    KECEPATAN AWAL SANGAT PELAN
-  */
-
-  game.speed=.075;
-
+  game.speed=.0075;
   game.distance=0;
-
-  /*
-    Pemain diberi waktu
-    sebelum rintangan baru muncul
-  */
-
-  game.spawnTimer=4000;
-
-  game.area=-1;
+  game.spawnTimer=8000;
 
   player.jump=0;
   player.velocity=0;
@@ -1204,299 +393,113 @@ function startGame(){
 
   resetObjects();
 
-  document.getElementById(
-    "start"
-  ).classList.add(
-    "hidden"
-  );
-
-  document.getElementById(
-    "over"
-  ).classList.add(
-    "hidden"
-  );
-
-  document.getElementById(
-    "pause"
-  ).textContent="Ⅱ";
-
-  updateHUD();
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("over").classList.add("hidden");
 }
-
-/* =========================
-   GAME OVER
-========================= */
 
 function endGame(){
-
   game.running=false;
-
   game.paused=false;
 
-  if(
-    game.score>
-    game.best
-  ){
-
-    game.best=
-      Math.floor(
-        game.score
-      );
-
-    localStorage.setItem(
-      "railBest",
-      game.best
-    );
+  if(game.score>game.best){
+    game.best=Math.floor(game.score);
+    localStorage.setItem("railBest",game.best);
   }
 
-  document.getElementById(
-    "finalScore"
-  ).textContent=
-    Math.floor(
-      game.score
-    );
-
-  document.getElementById(
-    "best"
-  ).textContent=
-    game.best;
-
-  document.getElementById(
-    "over"
-  ).classList.remove(
-    "hidden"
-  );
+  document.getElementById("finalScore").textContent=Math.floor(game.score);
+  document.getElementById("best").textContent=game.best;
+  document.getElementById("over").classList.remove("hidden");
 }
 
-/* =========================
-   BUTTONS
-========================= */
+function moveLeft(){
+  if(!game.running||game.paused)return;
+  game.lane=Math.max(0,game.lane-1);
+}
 
-document.getElementById(
-  "startBtn"
-).addEventListener(
-  "click",
-  startGame
-);
+function moveRight(){
+  if(!game.running||game.paused)return;
+  game.lane=Math.min(2,game.lane+1);
+}
 
-document.getElementById(
-  "again"
-).addEventListener(
-  "click",
-  startGame
-);
+function jump(){
+  if(!game.running||game.paused)return;
+  if(player.jump===0)player.velocity=.95;
+}
 
-document.getElementById(
-  "leftBtn"
-).addEventListener(
-  "click",
-  moveLeft
-);
+function togglePause(){
+  if(!game.running)return;
+  game.paused=!game.paused;
+  document.getElementById("pause").textContent=game.paused?"▶":"Ⅱ";
+}
 
-document.getElementById(
-  "rightBtn"
-).addEventListener(
-  "click",
-  moveRight
-);
+document.getElementById("startBtn").onclick=startGame;
+document.getElementById("again").onclick=startGame;
+document.getElementById("leftBtn").onclick=moveLeft;
+document.getElementById("rightBtn").onclick=moveRight;
+document.getElementById("jumpBtn").onclick=jump;
+document.getElementById("pause").onclick=togglePause;
 
-document.getElementById(
-  "jumpBtn"
-).addEventListener(
-  "click",
-  jump
-);
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a")moveLeft();
+  if(e.key==="ArrowRight"||e.key.toLowerCase()==="d")moveRight();
 
-document.getElementById(
-  "pause"
-).addEventListener(
-  "click",
-  togglePause
-);
-
-/* =========================
-   KEYBOARD
-========================= */
-
-document.addEventListener(
-  "keydown",
-  e=>{
-
-    if(
-      e.key==="ArrowLeft" ||
-      e.key.toLowerCase()==="a"
-    ){
-
-      moveLeft();
-    }
-
-    if(
-      e.key==="ArrowRight" ||
-      e.key.toLowerCase()==="d"
-    ){
-
-      moveRight();
-    }
-
-    if(
-      e.key==="ArrowUp" ||
-      e.key===" " ||
-      e.key.toLowerCase()==="w"
-    ){
-
-      e.preventDefault();
-
-      jump();
-    }
-
-    if(
-      e.key.toLowerCase()==="p"
-    ){
-
-      togglePause();
-    }
+  if(e.key==="ArrowUp"||e.key===" "||e.key.toLowerCase()==="w"){
+    e.preventDefault();
+    jump();
   }
-);
 
-/* =========================
-   TOUCH
-========================= */
+  if(e.key.toLowerCase()==="p")togglePause();
+});
 
-let touchX=0;
-let touchY=0;
+let touchX=0,touchY=0;
 
-canvas.addEventListener(
-  "touchstart",
-  e=>{
+canvas.addEventListener("touchstart",e=>{
+  const t=e.changedTouches[0];
+  touchX=t.clientX;
+  touchY=t.clientY;
+},{passive:true});
 
-    const t=
-      e.changedTouches[0];
+canvas.addEventListener("touchend",e=>{
+  const t=e.changedTouches[0];
+  const dx=t.clientX-touchX;
+  const dy=t.clientY-touchY;
 
-    touchX=t.clientX;
-    touchY=t.clientY;
-
-  },
-  {passive:true}
-);
-
-canvas.addEventListener(
-  "touchend",
-  e=>{
-
-    const t=
-      e.changedTouches[0];
-
-    const dx=
-      t.clientX-touchX;
-
-    const dy=
-      t.clientY-touchY;
-
-    if(
-      Math.abs(dx)>
-      Math.abs(dy)
-    ){
-
-      if(dx>30)
-        moveRight();
-
-      if(dx<-30)
-        moveLeft();
-
-    }else{
-
-      if(dy<-30)
-        jump();
-    }
-
-  },
-  {passive:true}
-);
-
-/* =========================
-   DRAW
-========================= */
+  if(Math.abs(dx)>Math.abs(dy)){
+    if(dx>30)moveRight();
+    if(dx<-30)moveLeft();
+  }else if(dy<-30){
+    jump();
+  }
+},{passive:true});
 
 function draw(){
+  drawBackground();
+  drawScenery();
+  drawRoad();
 
-  sky();
+  const sorted=[...objects].sort((a,b)=>b.z-a.z);
 
-  mountains();
-
-  scenery();
-
-  road();
-
-  const sorted=
-    [...objects]
-    .sort(
-      (a,b)=>b.z-a.z
-    );
-
-  for(
-    const o of sorted
-  ){
-
-    if(
-      o.type==="coin"
-    ){
-
-      drawCoin(o);
-    }
-
-    if(
-      o.type==="gem"
-    ){
-
-      drawGem(o);
-    }
-
-    if(
-      o.type==="barrier"
-    ){
-
-      drawBarrier(o);
-    }
+  for(const o of sorted){
+    if(o.type==="coin")drawCoin(o);
+    if(o.type==="gem")drawGem(o);
+    if(o.type==="barrier")drawBarrier(o);
   }
 
-  if(game.running){
-
-    drawPlayer();
-  }
+  if(game.running)drawPlayer();
 }
-
-/* =========================
-   LOOP
-========================= */
 
 function loop(now){
-
-  const dt=
-    Math.min(
-      now-lastTime,
-      40
-    );
-
-  lastTime=now;
+  const dt=Math.min(now-last,40);
+  last=now;
 
   update(dt);
-
   draw();
 
-  requestAnimationFrame(
-    loop
-  );
+  requestAnimationFrame(loop);
 }
 
-document.getElementById(
-  "best"
-).textContent=
-  game.best;
-
-updateHUD();
-
+document.getElementById("best").textContent=game.best;
 requestAnimationFrame(loop);
 </script>
-
 </body>
 </html>
