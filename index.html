@@ -1683,8 +1683,7 @@ function hitBarrier(){
 function updateObjects(dt){
   for(let i=game.objects.length-1;i>=0;i--){
     const o=game.objects[i];
-    o.z-=game.speed*dt*1.15;
-
+   o.z-=game.speed*dt*1.15;
     if(o.z<0.18){
       const sameLane=o.lane===game.lane;
       const airborne=player.jump>55;
@@ -1743,7 +1742,7 @@ function update(dt){
   if(!game.running || game.paused) return;
   game.distance += game.speed*dt*100;
   game.score += dt*0.018;
-  game.speed=Math.min(.018, .009 + game.distance*.0000015);
+  game.speed=Math.min(1.35, .9 + game.distance*.00015);
   updatePlayer(dt);
   updateObjects(dt);
   maybeSpawn();
@@ -1789,7 +1788,7 @@ function startGame(){
   game.gems=0;
   game.life=3;
   game.distance=0;
-  game.speed=.009;
+  game.speed=.9;
   game.area=-1;
   player.jump=0;
   player.velocity=0;
